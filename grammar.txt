@@ -1,0 +1,37 @@
+Using BNF(Backus-Naur Form)
+
+https://realpython.com/python-bnf-notation
+
+All terminals will be defined in the lexer.py
+
+
+<program>           ::= <statements> END_OF_FILE
+<statements>        ::= (NEWLINE <statement>)*
+<statement>         ::=
+
+<factor>            ::= (ADD|SUBTRACT) <factor> | <atom> -- tell whether number is positive or negative
+<term>              ::= <factor> ((MULTIPLY|DIVIDE) <factor>)*
+<arithmetic_expr>   ::= <factor> ((ADD|SUBTRACT) <factor>)*
+
+<logic_expr>        ::= <arithmetic_expr> (()<arithmetic_expr>)* | NOT <logic_expr>
+<expression>        ::= <logic_expr> ((KEYWORD: AND | KEYWORD:OR)<logic_expr>)* | KEYWORD: VAR IDENTIFIER ASSIGN <expression>
+
+<list>              ::= RIGHT_SQUARE (<expression> (COMMA <expression>)) LEFT_SQUARE
+
+<if_statement>      ::= KEYWORD: IF LEFT_PARENT <expression> RIGHT_PARENT KEYWORD: THEN (INDENT <statement>)+
+<elif_statement>    ::= <if_statement> KEYWORD: ELIF LEFT_PARENT <expression> RIGHT_PARENT KEYWORD: THEN (INDENT <statement>)+
+<else_statement>    ::= (<if_statement>|<elif_statement>)
+                        KEYWORD: ELSE (INDENT <statement>)+
+
+<while_statement>   ::= KEYWORD: WHILE LEFT_PARENT <expression> RIGHT_PARENT (INDENT <statement>)+
+<for_statement>     ::= KEYWORD: COUNT IDENTIFIER KEYWORD: FROM <atom> KEYWORD: TO <atom>
+                        (KEYWORD: USING <atom>)*
+
+<func_definition>   ::= KEYWORD: FUNCTION IDENTIFIER LEFT_PARENT (IDENTIFIER (COMMA IDENTIFIER)*) RIGHT_PARENT
+<func_call>         ::= IDENTIFIER LEFT_PARENT (IDENTIFIER (COMMA IDENTIFIER)*) RIGHT_PARENT
+
+<atom>              ::= INT
+                        |FLOAT
+                        |STRING
+                        |IDENTIFIER
+                        |<list>
